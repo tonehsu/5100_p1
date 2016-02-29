@@ -34,6 +34,8 @@
 			var g = svg.append("g");
 			var worldObjects;
 
+			var left
+
 			d3.json("world-50m.json", function(error, world) {
 				worldObjects = world;
 				if (error) {console.log(error);}
@@ -48,11 +50,18 @@
 			});
 
 			var digitScale = d3.scale.category20(); //discrete scale has 20 categories
-
 			var populationScale = d3.scale.linear().domain([20, 55.5, 64.5,100]).range(["#d8b365", "#FFFFFF","#FFFFFF", "#5ab4ac"]);
 
 			d3.csv("data.csv", function (error, rows) {
 				if (error) {console.log(error);}
+
+				left = d3.map(rows, function (country) { return Number(country.Left); });
+
+				countyPaths.selectAll("path")
+				.style("fill", function (country) {
+						var countryData = left.get(county.id);
+						return populationScale(countryData.PopChangeRate1014);
+				});
 
 			});
 
